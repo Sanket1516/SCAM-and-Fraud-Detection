@@ -1,0 +1,17 @@
+Use these from:
+cd "C:\Drive D\Projects\SCAM and Fraud Detection"
+Build the Docker image once:
+docker compose build
+Run the parser with the default Hard PDF:
+docker compose run --rm claim-parser-surya
+The output will be written to:
+.\outputs\PDF_Original_Hard_PDF_Deid_Deidentification_Hard_0_extracted_claim.json
+Run a different PDF without editing code:
+docker compose run --rm -e INPUT_PDF=/workspace/PDF_Original/Easy/PDF_Deid_Deidentification_0.pdf claim-parser-surya
+Run a Medium example:
+docker compose run --rm -e INPUT_PDF=/workspace/PDF_Original/Medium/PDF_Deid_Deidentification_Medium_0.pdf claim-parser-surya
+Run another Hard example:
+docker compose run --rm -e INPUT_PDF=/workspace/PDF_Original/Hard/PDF_Deid_Deidentification_Hard_1.pdf claim-parser-surya
+If you want to clear the cached Surya models and force a fresh download:
+docker volume rm scamandfrauddetection_docling-root-cache
+If you want, I can also give you a one-line PowerShell loop to process all PDFs in Easy, Medium, or Hard.
