@@ -154,7 +154,9 @@ def main() -> None:
     """Run a sample extraction and persist the output to JSON."""
 
     input_pdf = Path(r"PDF_Original\Easy\PDF_Deid_Deidentification_0.pdf")
-    output_json = Path("extracted_claim.json")
+    output_dir = Path("outputs")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_json = output_dir / f"{input_pdf.stem}_extracted_claim.json"
 
     converter, setup_warnings = get_converter()
     master = extract_claim_data(input_pdf, converter, setup_warnings)
