@@ -156,13 +156,15 @@ def main() -> None:
     input_pdf = Path(r"PDF_Original\Easy\PDF_Deid_Deidentification_0.pdf")
     output_dir = Path("outputs")
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_json = output_dir / f"{input_pdf.stem}_extracted_claim.json"
+    output_name_parts = [part for part in input_pdf.with_suffix("").parts if part not in {".", ".."}]
+    output_json = output_dir / f"{'_'.join(output_name_parts)}_extracted_claim.json"
 
     converter, setup_warnings = get_converter()
     master = extract_claim_data(input_pdf, converter, setup_warnings)
 
     output_json.write_text(json.dumps(master, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    print(f"Input PDF: {input_pdf.resolve()}")
     print(f"Wrote {output_json.resolve()}")
 
 
