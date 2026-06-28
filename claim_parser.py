@@ -8,6 +8,7 @@ and writes a combined master dictionary to ``extracted_claim.json``.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -153,10 +154,17 @@ def extract_claim_data(
 def main() -> None:
     """Run a sample extraction and persist the output to JSON."""
 
-    input_pdf = Path(r"PDF_Original\Easy\PDF_Deid_Deidentification_0.pdf")
-    output_dir = Path("outputs")
+    default_pdf = r".\PDF_Original\Hard\PDF_Deid_Deidentification_Hard_0.pdf"
+    input_pdf = Path(os.environ.get("INPUT_PDF", default_pdf))
+    output_dir = Path(os.environ.get("OUTPUT_DIR", "outputs"))
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_name_parts = [part for part in input_pdf.with_suffix("").parts if part not in {".", ".."}]
+    path_parts = input_pdf.with_suffix("").parts
+    anchor = input_pdf.anchor
+    output_name_parts = [
+        part
+        for part in path_parts
+        if part not in {".", "..", "", anchor, "workspace"}
+    ]
     output_json = output_dir / f"{'_'.join(output_name_parts)}_extracted_claim.json"
 
     converter, setup_warnings = get_converter()

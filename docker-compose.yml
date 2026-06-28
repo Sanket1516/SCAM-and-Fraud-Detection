@@ -1,0 +1,23 @@
+services:
+  claim-parser-surya:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: claim-parser-surya:latest
+    environment:
+      INPUT_PDF: /workspace/PDF_Original/Hard/PDF_Deid_Deidentification_Hard_0.pdf
+      OUTPUT_DIR: /workspace/outputs
+      HF_HOME: /models/huggingface
+      XDG_CACHE_HOME: /models/cache
+    volumes:
+      - ./:/workspace
+      - ./claim_parser.py:/app/claim_parser.py:ro
+      - huggingface-cache:/models/huggingface
+      - docling-cache:/models/cache
+      - docling-root-cache:/root/.cache/docling
+    working_dir: /app
+
+volumes:
+  huggingface-cache:
+  docling-cache:
+  docling-root-cache:
