@@ -9,9 +9,14 @@ services:
       OUTPUT_DIR: /workspace/outputs
       HF_HOME: /models/huggingface
       XDG_CACHE_HOME: /models/cache
+    ports:
+      - "5000:5000"
     volumes:
       - ./:/workspace
       - ./claim_parser.py:/app/claim_parser.py:ro
+      - ./app.py:/app/app.py:ro
+      - ./templates:/app/templates:ro
+      - ./static:/app/static:ro
       - huggingface-cache:/models/huggingface
       - docling-cache:/models/cache
       - docling-root-cache:/root/.cache/docling

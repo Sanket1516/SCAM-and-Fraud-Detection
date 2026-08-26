@@ -2,3 +2,6 @@ docling>=2.0.0
 docling-surya>=0.1.0
 pandas>=2.0.0
 pillow>=10.0.0
+flask
+werkzeug
+transformers<5.0

@@ -1,3 +1,6 @@
 docling
 onnxruntime
 pandas
+flask
+werkzeug
+transformers<5.0

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud & Scam Detection - Document Extraction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                    <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                    <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+                <h1>Claim Extractor Core</h1>
+            </div>
+            <p class="subtitle">Extract structured data from unstructured PDF claims instantly.</p>
+        </header>
+
+        <main class="main-content">
+            <div class="upload-section" id="upload-section">
+                <div class="drop-zone" id="drop-zone">
+                    <input type="file" id="file-input" accept="application/pdf" hidden>
+                    <div class="drop-zone-content">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <h3>Drag & Drop your PDF here</h3>
+                        <p>or click to browse your files</p>
+                        <span class="file-limits">Supports PDF up to 16MB</span>
+                    </div>
+                </div>
+
+                <div class="loading-state" id="loading-state" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Analyzing document & extracting tables...</p>
+                    <p class="sub-loading">This may take a moment depending on document size.</p>
+                </div>
+            </div>
+
+            <div class="result-section" id="result-section" style="display: none;">
+                <div class="result-header">
+                    <h2>Extraction Results</h2>
+                    <div class="actions">
+                        <button class="btn btn-secondary" id="btn-reset">Upload Another</button>
+                        <button class="btn btn-primary" id="btn-download">Download JSON</button>
+                    </div>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab active" data-target="json-view">Raw JSON</button>
+                    <button class="tab" data-target="markdown-view">Markdown Content</button>
+                    <button class="tab" data-target="tables-view">Extracted Tables (<span id="table-count">0</span>)</button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="json-view" class="view-panel active">
+                        <pre><code id="json-output"></code></pre>
+                    </div>
+                    <div id="markdown-view" class="view-panel">
+                        <pre><code id="markdown-output"></code></pre>
+                    </div>
+                    <div id="tables-view" class="view-panel">
+                        <div id="tables-container"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
