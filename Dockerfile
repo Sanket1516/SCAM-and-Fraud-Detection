@@ -28,6 +28,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install -r requirements.docker.txt
 
 COPY claim_parser.py .
+COPY fraud_detector.py .
 COPY app.py .
 COPY templates/ templates/
 COPY static/ static/

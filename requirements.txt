@@ -4,3 +4,4 @@ pandas
 flask
 werkzeug
 transformers<5.0
+pytest

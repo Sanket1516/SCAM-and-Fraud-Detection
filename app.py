@@ -1,4 +1,5 @@
 import os
+import uuid
 from pathlib import Path
 from flask import Flask, request, jsonify, render_template
 from werkzeug.utils import secure_filename
@@ -22,6 +23,14 @@ print("Converter initialized.")
 def index():
     return render_template('index.html')
 
+@app.route('/health')
+def health():
+    return jsonify({'status': 'ok'})
+
+@app.errorhandler(413)
+def too_large(_):
+    return jsonify({'error': 'File exceeds the 16 MB limit.'}), 413
+
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -32,7 +41,8 @@ def upload_file():
         return jsonify({'error': 'No selected file'}), 400
         
     if file and file.filename.lower().endswith('.pdf'):
-        filename = secure_filename(file.filename)
+        # Unique name so concurrent uploads of the same filename never collide.
+        filename = f"{uuid.uuid4().hex}_{secure_filename(file.filename)}"
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         
@@ -55,4 +65,4 @@ def upload_file():
     return jsonify({'error': 'Invalid file type. Only PDF is allowed.'}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=os.environ.get('FLASK_DEBUG') == '1', host='0.0.0.0', port=5000)
