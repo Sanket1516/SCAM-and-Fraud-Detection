@@ -23,6 +23,8 @@ from docling.datamodel.pipeline_options import (
 )
 from docling.document_converter import DocumentConverter, PdfFormatOption
 
+from fraud_detector import analyze_claim
+
 try:
     from docling_surya import SuryaOcrOptions
 except ImportError:
@@ -111,6 +113,7 @@ def extract_claim_data(
         "table_count": 0,
         "errors": [],
         "warnings": list(setup_warnings or []),
+        "fraud_analysis": None,
     }
 
     if not source_path.exists():
@@ -148,13 +151,18 @@ def extract_claim_data(
 
     master["tables"] = tables
     master["table_count"] = len(tables)
+
+    try:
+        master["fraud_analysis"] = analyze_claim(master)
+    except Exception as exc:  # never lose the extraction because scoring failed
+        master["errors"].append(f"Fraud analysis failed: {exc}")
     return master
 
 
 def main() -> None:
     """Run a sample extraction and persist the output to JSON."""
 
-    default_pdf = r".\PDF_Original\Hard\PDF_Deid_Deidentification_Hard_0.pdf"
+    default_pdf = str(Path("PDF_Original") / "Hard" / "PDF_Deid_Deidentification_Hard_0.pdf")
     input_pdf = Path(os.environ.get("INPUT_PDF", default_pdf))
     output_dir = Path(os.environ.get("OUTPUT_DIR", "outputs"))
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -172,6 +180,9 @@ def main() -> None:
 
     output_json.write_text(json.dumps(master, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    fraud = master.get("fraud_analysis") or {}
+    print(f"Fraud risk: {fraud.get('risk_level', 'n/a')} ({fraud.get('risk_score', 'n/a')}/100), "
+          f"{fraud.get('flag_count', 0)} flag(s)")
     print(f"Input PDF: {input_pdf.resolve()}")
     print(f"Wrote {output_json.resolve()}")
 

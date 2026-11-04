@@ -56,14 +56,26 @@
                     </div>
                 </div>
                 
+                <div class="risk-banner risk-low" id="risk-banner">
+                    <div class="risk-score"><span id="risk-score">0</span><small>/100</small></div>
+                    <div>
+                        <strong id="risk-level">Low risk</strong>
+                        <p id="risk-summary">No fraud indicators detected.</p>
+                    </div>
+                </div>
+
                 <div class="tabs">
-                    <button class="tab active" data-target="json-view">Raw JSON</button>
+                    <button class="tab active" data-target="fraud-view">Fraud Analysis (<span id="flag-count">0</span>)</button>
+                    <button class="tab" data-target="json-view">Raw JSON</button>
                     <button class="tab" data-target="markdown-view">Markdown Content</button>
                     <button class="tab" data-target="tables-view">Extracted Tables (<span id="table-count">0</span>)</button>
                 </div>
 
                 <div class="tab-content">
-                    <div id="json-view" class="view-panel active">
+                    <div id="fraud-view" class="view-panel active">
+                        <div id="flags-container"></div>
+                    </div>
+                    <div id="json-view" class="view-panel">
                         <pre><code id="json-output"></code></pre>
                     </div>
                     <div id="markdown-view" class="view-panel">
